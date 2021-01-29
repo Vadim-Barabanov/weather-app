@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import { Box, Container, Typography } from '@material-ui/core';
+import React, { useState } from 'react';
 import './App.css';
+// Material-UI
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { Switch } from '@material-ui/core';
+import CssBaseLine from '@material-ui/core/CssBaseline';
+import { light, dark } from './themes/default';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    const [theme, setTheme] = useState(true);
+
+    const appliedTheme = createMuiTheme(theme ? light : dark);
+
+    return (
+        <ThemeProvider theme={appliedTheme}>
+            <CssBaseLine />
+            <Container maxWidth="sm">
+                <Box my={4}>
+                    <Typography variant="h4" component="h1" gutterBottom>
+                        Hi world!
+                    </Typography>
+                    <Switch
+                        checked={!theme}
+                        onChange={() => setTheme(!theme)}
+                    />
+                </Box>
+            </Container>
+        </ThemeProvider>
+    );
+};
 
 export default App;
