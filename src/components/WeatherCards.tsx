@@ -57,10 +57,12 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
 
     if (wData !== null) {
         //@ts-ignore
-        weatherCards = wData.list.map((item: any) => {
-            let sliced = item.dt_txt.slice(0, 10);
+        weatherCards = wData.list.map((data: any) => {
+            let sliced = data.dt_txt.slice(0, 10);
             if (sliced === todayData) {
-                return <WeatherCard data={item} />;
+                return <WeatherCard data={data} key={data.dt} />;
+            } else {
+                return null;
             }
         });
     }

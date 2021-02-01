@@ -42,14 +42,16 @@ export const CityCards: FC<CityCardsPropsType> = ({ changeCity }) => {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
+    // To add city card, just add the name of the city to array:
+    const cities = ['Kyiv', 'Minsk', 'Toronto', 'Oslo'];
+
     return (
         <Container
             maxWidth="md"
             className={`${classes.root} ${matches ? null : classes.none}`}>
-            <CityCard city="Kyiv" changeCity={changeCity} />
-            <CityCard city="Minsk" changeCity={changeCity} />
-            <CityCard city="Paris" changeCity={changeCity} />
-            <CityCard city="Oslo" changeCity={changeCity} />
+            {cities.map((c) => (
+                <CityCard city={c} changeCity={changeCity} key={c} />
+            ))}
         </Container>
     );
 };
