@@ -15,7 +15,6 @@ const App = () => {
     const [city, setCity] = useState('Kyiv');
 
     const changeCity = (value: string) => {
-        console.log('App.tsx changeCity action');
         setCity(value);
     };
 

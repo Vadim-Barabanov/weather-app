@@ -4,6 +4,8 @@ import {
     makeStyles,
     Theme,
     Typography,
+    useMediaQuery,
+    useTheme,
 } from '@material-ui/core';
 import { FC } from 'react';
 
@@ -12,10 +14,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         marginTop: '3rem',
         display: 'flex',
         justifyContent: 'center',
+        flexWrap: 'wrap',
     },
     card: {
         padding: '1.5rem',
-        margin: '0 1rem',
+        margin: '1rem',
         borderRadius: '10px',
         border: `1px solid ${theme.palette.primary.light}`,
         transition: '0.3s',
@@ -23,6 +26,9 @@ const useStyles = makeStyles((theme: Theme) => ({
             cursor: 'pointer',
             backgroundColor: theme.palette.background.paper,
         },
+    },
+    none: {
+        display: 'none',
     },
 }));
 
@@ -33,8 +39,13 @@ type CityCardsPropsType = {
 export const CityCards: FC<CityCardsPropsType> = ({ changeCity }) => {
     const classes = useStyles();
 
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.up('sm'));
+
     return (
-        <Container maxWidth="md" className={classes.root}>
+        <Container
+            maxWidth="md"
+            className={`${classes.root} ${matches ? null : classes.none}`}>
             <CityCard city="Kyiv" changeCity={changeCity} />
             <CityCard city="Minsk" changeCity={changeCity} />
             <CityCard city="Paris" changeCity={changeCity} />

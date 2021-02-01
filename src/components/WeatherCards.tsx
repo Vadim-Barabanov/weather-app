@@ -30,7 +30,9 @@ type WeatherCardsPropsType = {
 
 export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
     const [wData, setWData] = useState(null);
+    const [error, setError] = useState(null);
     const [isFetching, setIsFetching] = useState(false);
+    const classes = useStyles();
 
     let today = new Date();
     let todayData: string = today.toJSON();
@@ -41,10 +43,14 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
         weatherAPI
             .getWeatherData(city)
             .then((res) => {
+                setError(null);
                 setWData(res.data);
                 setIsFetching(false);
             })
-            .catch((reason) => console.log('API rejection reason: ' + reason));
+            .catch((reason) => {
+                setError(reason);
+                setIsFetching(false);
+            });
     }, [city]);
 
     let weatherCards: any[] = [];
@@ -59,7 +65,15 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
         });
     }
 
-    const classes = useStyles();
+    if (error) {
+        return (
+            <Box style={{ textAlign: 'center', fontSize: '20px' }}>
+                {/* @ts-ignore*/}
+                {error.message}
+            </Box>
+        );
+    }
+
     return (
         <Container maxWidth="lg" className={classes.root}>
             {isFetching ? (
@@ -81,13 +95,13 @@ type CardPropsType = {
 
 const WeatherCard: FC<CardPropsType> = ({ data }) => {
     const handleCardCilck = () => {
-        console.log('weathercardlick');
+        console.log('weathercard click action');
     };
 
     const t = data.dt_txt.slice(11, 16);
     let stringTime: string =
         t === '09:00'
-            ? 'Morging'
+            ? 'Morning'
             : t === '12:00'
             ? 'Midday'
             : t === '15:00'
@@ -102,7 +116,9 @@ const WeatherCard: FC<CardPropsType> = ({ data }) => {
     return (
         <Box onClick={handleCardCilck} className={classes.card}>
             <Typography variant="h6">{stringTime}</Typography>
-            <Typography component="p">{data.main.temp} C&deg;</Typography>
+            <Typography style={{ fontSize: '2rem' }} component="p">
+                {data.main.temp} C&deg;
+            </Typography>
             <Typography component="p">
                 Feels like: {data.main.feels_like} C&deg;
             </Typography>
