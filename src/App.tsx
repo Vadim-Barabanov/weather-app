@@ -11,14 +11,21 @@ import { WeatherCards } from './components/WeatherCards';
 import { CityCards } from './components/CityCards';
 
 const App = () => {
-    const [theme, setTheme] = useState(true);
+    const toggler = localStorage.getItem('Theme');
+    const [theme, setTheme] = useState(toggler === 'dark' ? false : true);
+
+    const appliedTheme = createMuiTheme(theme ? light : dark);
+
+    const toggleTheme = () => {
+        localStorage.setItem('Theme', theme ? 'dark' : 'light');
+        setTheme(!theme);
+    };
+
     const [city, setCity] = useState('Kyiv');
 
     const changeCity = (value: string) => {
         setCity(value);
     };
-
-    const appliedTheme = createMuiTheme(theme ? light : dark);
 
     return (
         <ThemeProvider theme={appliedTheme}>
@@ -30,10 +37,7 @@ const App = () => {
                     <Typography variant="h4" component="h1" gutterBottom>
                         Weater App
                     </Typography>
-                    <Switch
-                        checked={!theme}
-                        onChange={() => setTheme(!theme)}
-                    />
+                    <Switch checked={!theme} onChange={toggleTheme} />
                 </Box>
                 <Box my={4}>
                     <InputBar changeCity={changeCity} />
