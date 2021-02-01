@@ -12,13 +12,19 @@ import { CityCards } from './components/CityCards';
 
 const App = () => {
     const [theme, setTheme] = useState(true);
+    const [city, setCity] = useState('Kyiv');
+
+    const changeCity = (value: string) => {
+        console.log('App.tsx changeCity action');
+        setCity(value);
+    };
 
     const appliedTheme = createMuiTheme(theme ? light : dark);
 
     return (
         <ThemeProvider theme={appliedTheme}>
             <CssBaseLine />
-            <Container maxWidth="sm">
+            <Container maxWidth="lg">
                 <Box
                     my={4}
                     style={{ display: 'flex', justifyContent: 'center' }}>
@@ -31,9 +37,18 @@ const App = () => {
                     />
                 </Box>
                 <Box my={4}>
-                    <InputBar />
-                    <CityCards />
-                    <WeatherCards />
+                    <InputBar changeCity={changeCity} />
+                    <CityCards changeCity={changeCity} />
+                    <Typography
+                        component="h2"
+                        variant="h4"
+                        style={{
+                            textAlign: 'center',
+                            margin: '30px 0 15px 0',
+                        }}>
+                        {city + ' today:'}
+                    </Typography>
+                    <WeatherCards city={city} />
                 </Box>
             </Container>
         </ThemeProvider>

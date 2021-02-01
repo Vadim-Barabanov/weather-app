@@ -1,5 +1,5 @@
 import { Container, makeStyles, TextField } from '@material-ui/core';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -8,12 +8,17 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const InputBar = () => {
+type InputBarPropsType = {
+    changeCity: (city: string) => void;
+};
+
+export const InputBar: FC<InputBarPropsType> = ({ changeCity }) => {
     const [value, setValue] = useState('');
     const classes = useStyles();
 
     const submit = () => {
-        console.log(value);
+        changeCity(value);
+        setValue('');
     };
 
     const handleKeyPress = (e: any) => {
@@ -27,10 +32,9 @@ export const InputBar = () => {
             <TextField
                 name="city"
                 variant="outlined"
-                placeholder="Kyiv"
+                placeholder="Your city"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                onBlur={submit}
                 onKeyPress={handleKeyPress}
             />
         </Container>

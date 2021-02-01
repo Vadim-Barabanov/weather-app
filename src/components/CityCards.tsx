@@ -26,25 +26,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-export const CityCards = () => {
+type CityCardsPropsType = {
+    changeCity: (city: string) => void;
+};
+
+export const CityCards: FC<CityCardsPropsType> = ({ changeCity }) => {
     const classes = useStyles();
+
     return (
         <Container maxWidth="md" className={classes.root}>
-            <CityCard city="Kyiv" />
-            <CityCard city="Minsk" />
-            <CityCard city="Paris" />
-            <CityCard city="Oslo" />
+            <CityCard city="Kyiv" changeCity={changeCity} />
+            <CityCard city="Minsk" changeCity={changeCity} />
+            <CityCard city="Paris" changeCity={changeCity} />
+            <CityCard city="Oslo" changeCity={changeCity} />
         </Container>
     );
 };
 
 type CardPropsType = {
     city: string;
+    changeCity: (city: string) => void;
 };
 
-const CityCard: FC<CardPropsType> = ({ city }) => {
+const CityCard: FC<CardPropsType> = ({ city, changeCity }) => {
     const handleCardCilck = () => {
-        console.log('cardlick');
+        changeCity(city);
     };
 
     const classes = useStyles();
