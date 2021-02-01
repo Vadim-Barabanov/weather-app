@@ -11,7 +11,7 @@ import { FC } from 'react';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        marginTop: '3rem',
+        marginTop: '1rem',
         display: 'flex',
         justifyContent: 'center',
         flexWrap: 'wrap',

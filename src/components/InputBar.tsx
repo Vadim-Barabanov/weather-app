@@ -1,10 +1,12 @@
-import { Container, makeStyles, TextField } from '@material-ui/core';
+import { Button, Container, makeStyles, TextField } from '@material-ui/core';
 import { FC, useState } from 'react';
 
 const useStyles = makeStyles(() => ({
     root: {
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
+        alignItems: 'center',
     },
 }));
 
@@ -17,6 +19,7 @@ export const InputBar: FC<InputBarPropsType> = ({ changeCity }) => {
     const classes = useStyles();
 
     const submit = () => {
+        if (!value) return 0;
         changeCity(value);
         setValue('');
     };
@@ -37,6 +40,12 @@ export const InputBar: FC<InputBarPropsType> = ({ changeCity }) => {
                 onChange={(e) => setValue(e.target.value)}
                 onKeyPress={handleKeyPress}
             />
+            <Button
+                onClick={submit}
+                style={{ marginTop: '20px' }}
+                variant="contained">
+                Get forecast
+            </Button>
         </Container>
     );
 };

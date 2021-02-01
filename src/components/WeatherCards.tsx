@@ -5,6 +5,7 @@ import {
     makeStyles,
     Theme,
     Typography,
+    useTheme,
 } from '@material-ui/core';
 import { weatherAPI } from '../api/api';
 import Preloader from '../assets/three-dots.svg';
@@ -33,6 +34,7 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
     const [error, setError] = useState(null);
     const [isFetching, setIsFetching] = useState(false);
     const classes = useStyles();
+    const theme = useTheme();
 
     let today = new Date();
     let todayData: string = today.toJSON();
@@ -78,7 +80,18 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
 
     return (
         <Container maxWidth="lg" className={classes.root}>
-            {isFetching ? (
+            {isFetching && theme.palette.type === 'light' ? (
+                <img
+                    src={Preloader}
+                    alt="Loading..."
+                    style={{
+                        marginTop: '3.5rem',
+                        backgroundColor: theme.palette.background.paper,
+                        padding: '5px',
+                        borderRadius: '8px',
+                    }}
+                />
+            ) : isFetching && theme.palette.type === 'dark' ? (
                 <img
                     src={Preloader}
                     alt="Loading..."
@@ -100,6 +113,8 @@ const WeatherCard: FC<CardPropsType> = ({ data }) => {
         console.log('weathercard click action');
     };
 
+    const baseImgURL = 'http://openweathermap.org/img/wn/';
+
     const t = data.dt_txt.slice(11, 16);
     let stringTime: string =
         t === '09:00'
@@ -118,11 +133,21 @@ const WeatherCard: FC<CardPropsType> = ({ data }) => {
     return (
         <Box onClick={handleCardCilck} className={classes.card}>
             <Typography variant="h6">{stringTime}</Typography>
-            <Typography style={{ fontSize: '2rem' }} component="p">
-                {data.main.temp} C&deg;
+            <Typography
+                style={{
+                    fontSize: '2rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                }}
+                component="p">
+                <span>{Math.round(data.main.temp)} C&deg;</span>
+                <img
+                    src={`${baseImgURL + data.weather[0].icon}.png`}
+                    alt="Weather"
+                />
             </Typography>
             <Typography component="p">
-                Feels like: {data.main.feels_like} C&deg;
+                Feels like: {Math.round(data.main.feels_like)} C&deg;
             </Typography>
         </Box>
     );

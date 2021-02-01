@@ -1,12 +1,36 @@
-import { Box, Container, Switch, Typography } from '@material-ui/core';
+import {
+    Box,
+    Container,
+    Switch,
+    Typography,
+    useMediaQuery,
+} from '@material-ui/core';
 import CssBaseLine from '@material-ui/core/CssBaseline';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import {
+    createMuiTheme,
+    makeStyles,
+    ThemeProvider,
+    useTheme,
+} from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import './App.css';
 import { CityCards } from './components/CityCards';
 import { InputBar } from './components/InputBar';
 import { WeatherCards } from './components/WeatherCards';
 import { dark, light } from './themes/default';
+import WbSunnyIcon from '@material-ui/icons/WbSunny';
+import Brightness3Icon from '@material-ui/icons/Brightness3';
+
+const useStyles = makeStyles(() => ({
+    switcherBox: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    swBphone: {
+        justifyContent: 'center',
+    },
+}));
 
 const App = () => {
     // Theme swither & saving theme between page realoading
@@ -17,7 +41,9 @@ const App = () => {
         localStorage.setItem('Theme', theme ? 'dark' : 'light');
         setTheme(!theme);
     };
-
+    const classes = useStyles();
+    const themeQ = useTheme();
+    const matches = useMediaQuery(themeQ.breakpoints.up('sm'));
     // Initial city
     const [city, setCity] = useState('Kyiv');
 
@@ -30,12 +56,22 @@ const App = () => {
             <CssBaseLine />
             <Container maxWidth="lg">
                 <Box
+                    className={`${classes.switcherBox} ${
+                        matches ? null : classes.swBphone
+                    }`}>
+                    <WbSunnyIcon />
+                    <Switch checked={!theme} onChange={toggleTheme} />
+                    <Brightness3Icon />
+                </Box>
+                <Box
                     my={4}
-                    style={{ display: 'flex', justifyContent: 'center' }}>
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}>
                     <Typography variant="h4" component="h1" gutterBottom>
                         Weather App
                     </Typography>
-                    <Switch checked={!theme} onChange={toggleTheme} />
                 </Box>
                 <Box my={4}>
                     <InputBar changeCity={changeCity} />
