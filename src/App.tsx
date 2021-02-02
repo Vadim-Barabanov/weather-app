@@ -32,8 +32,10 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
+export type TUnits = 'metric' | 'imperial' | '';
+
 const App = () => {
-    // Theme swither & saving theme between page realoading
+    // Theme preference
     const toggler = localStorage.getItem('Theme');
     const [theme, setTheme] = useState(toggler === 'dark' ? false : true);
     const appliedTheme = createMuiTheme(theme ? light : dark);
@@ -44,8 +46,15 @@ const App = () => {
     const classes = useStyles();
     const themeQ = useTheme();
     const matches = useMediaQuery(themeQ.breakpoints.up('sm'));
-    // Initial city
+
+    // Initial data
     const [city, setCity] = useState('Kyiv');
+
+    const [units, setUnits] = useState<TUnits>('metric');
+
+    const changeUnits = (value: TUnits) => {
+        setUnits(value);
+    };
 
     const changeCity = (value: string) => {
         setCity(value);
@@ -74,7 +83,10 @@ const App = () => {
                     </Typography>
                 </Box>
                 <Box my={4}>
-                    <InputBar changeCity={changeCity} />
+                    <InputBar
+                        changeUnits={changeUnits}
+                        changeCity={changeCity}
+                    />
                     <CityCards changeCity={changeCity} />
                     <Typography
                         component="h2"
@@ -85,7 +97,7 @@ const App = () => {
                         }}>
                         {city + ' today:'}
                     </Typography>
-                    <WeatherCards city={city} />
+                    <WeatherCards units={units} city={city} />
                 </Box>
             </Container>
         </ThemeProvider>

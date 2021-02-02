@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { weatherAPI } from '../api/api';
 import Preloader from '../assets/three-dots.svg';
+import { TUnits } from '../App';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -23,13 +24,28 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderRadius: '10px',
         border: `1px solid ${theme.palette.primary.light}`,
     },
+    loaderLight: {
+        marginTop: '3.5rem',
+        backgroundColor: theme.palette.background.paper,
+        padding: '5px',
+        borderRadius: '8px',
+    },
+    loaderDark: {
+        marginTop: '3.5rem',
+    },
+    mainTemp: {
+        fontSize: '2rem',
+        display: 'flex',
+        alignItems: 'center',
+    },
 }));
 
 type WeatherCardsPropsType = {
     city: string;
+    units: TUnits;
 };
 
-export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
+export const WeatherCards: FC<WeatherCardsPropsType> = ({ city, units }) => {
     const [wData, setWData] = useState(null);
     const [error, setError] = useState(null);
     const [isFetching, setIsFetching] = useState(false);
@@ -43,7 +59,7 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
     useEffect(() => {
         setIsFetching(true);
         weatherAPI
-            .getWeatherData(city)
+            .getWeatherData(city, units)
             .then((res) => {
                 setError(null);
                 setWData(res.data);
@@ -53,7 +69,7 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
                 setError(reason);
                 setIsFetching(false);
             });
-    }, [city]);
+    }, [city, units]);
 
     let weatherCards: any[] = [];
 
@@ -62,7 +78,7 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
         weatherCards = wData.list.map((data: any) => {
             let sliced = data.dt_txt.slice(0, 10);
             if (sliced === todayData) {
-                return <WeatherCard data={data} key={data.dt} />;
+                return <WeatherCard units={units} data={data} key={data.dt} />;
             } else {
                 return null;
             }
@@ -84,18 +100,13 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
                 <img
                     src={Preloader}
                     alt="Loading..."
-                    style={{
-                        marginTop: '3.5rem',
-                        backgroundColor: theme.palette.background.paper,
-                        padding: '5px',
-                        borderRadius: '8px',
-                    }}
+                    className={classes.loaderLight}
                 />
             ) : isFetching && theme.palette.type === 'dark' ? (
                 <img
                     src={Preloader}
                     alt="Loading..."
-                    style={{ marginTop: '3.5rem' }}
+                    className={classes.loaderDark}
                 />
             ) : (
                 weatherCards
@@ -106,14 +117,15 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city }) => {
 
 type CardPropsType = {
     data: any;
+    units: TUnits;
 };
 
-const WeatherCard: FC<CardPropsType> = ({ data }) => {
+const WeatherCard: FC<CardPropsType> = ({ data, units }) => {
     const handleCardCilck = () => {
         console.log('weathercard click action');
     };
 
-    const baseImgURL = 'http://openweathermap.org/img/wn/';
+    const baseImgURL = 'https://openweathermap.org/img/wn/';
 
     const t = data.dt_txt.slice(11, 16);
     let stringTime: string =
@@ -133,21 +145,29 @@ const WeatherCard: FC<CardPropsType> = ({ data }) => {
     return (
         <Box onClick={handleCardCilck} className={classes.card}>
             <Typography variant="h6">{stringTime}</Typography>
-            <Typography
-                style={{
-                    fontSize: '2rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                }}
-                component="p">
-                <span>{Math.round(data.main.temp)} C&deg;</span>
+            <Typography className={classes.mainTemp} component="p">
+                <span>{Math.round(data.main.temp)}</span>
+                <span>
+                    {units === 'metric' ? (
+                        <span>&deg;C</span>
+                    ) : (
+                        <span>&deg;F</span>
+                    )}
+                </span>
                 <img
                     src={`${baseImgURL + data.weather[0].icon}.png`}
                     alt="Weather"
                 />
             </Typography>
             <Typography component="p">
-                Feels like: {Math.round(data.main.feels_like)} C&deg;
+                Feels like: {Math.round(data.main.feels_like)}
+                <span>
+                    {units === 'imperial' ? (
+                        <span>&deg;F</span>
+                    ) : (
+                        <span>&deg;C</span>
+                    )}
+                </span>
             </Typography>
         </Box>
     );

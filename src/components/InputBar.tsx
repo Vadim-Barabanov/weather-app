@@ -1,20 +1,34 @@
 import { Button, Container, makeStyles, TextField } from '@material-ui/core';
-import { FC, useState } from 'react';
+import React, { FC, useState } from 'react';
+import { Settings } from './Settings';
+import { TUnits } from '../App';
 
 const useStyles = makeStyles(() => ({
     root: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
+        display: 'grid',
+        gridTemplateColumns: '2fr 1fr',
+        gridTemplateRows: 'fr 1fr',
+        gridGap: '2rem',
         alignItems: 'center',
+    },
+    textfield: {
+        gridColumn: '1/3',
+        justifySelf: 'center',
+    },
+    btn: {
+        justifySelf: 'flex-end',
     },
 }));
 
 type InputBarPropsType = {
     changeCity: (city: string) => void;
+    changeUnits: (value: TUnits) => void;
 };
 
-export const InputBar: FC<InputBarPropsType> = ({ changeCity }) => {
+export const InputBar: FC<InputBarPropsType> = ({
+    changeCity,
+    changeUnits,
+}) => {
     const [value, setValue] = useState('');
     const classes = useStyles();
 
@@ -33,6 +47,7 @@ export const InputBar: FC<InputBarPropsType> = ({ changeCity }) => {
     return (
         <Container className={classes.root} maxWidth="sm">
             <TextField
+                className={classes.textfield}
                 name="city"
                 variant="outlined"
                 placeholder="Your city"
@@ -42,10 +57,11 @@ export const InputBar: FC<InputBarPropsType> = ({ changeCity }) => {
             />
             <Button
                 onClick={submit}
-                style={{ marginTop: '20px' }}
+                className={classes.btn}
                 variant="contained">
                 Get forecast
             </Button>
+            <Settings changeUnits={changeUnits} />
         </Container>
     );
 };

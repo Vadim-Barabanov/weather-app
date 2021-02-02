@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexWrap: 'wrap',
     },
     card: {
-        padding: '1.5rem',
+        padding: '1rem',
         margin: '1rem',
         borderRadius: '10px',
         border: `1px solid ${theme.palette.primary.light}`,
