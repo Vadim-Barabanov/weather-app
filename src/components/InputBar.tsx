@@ -1,4 +1,10 @@
-import { Button, Container, makeStyles, TextField } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    Container,
+    makeStyles,
+    TextField,
+} from '@material-ui/core';
 import React, { FC, useState } from 'react';
 import { Settings } from './Settings';
 import { TUnits } from '../App';
@@ -6,17 +12,22 @@ import { TUnits } from '../App';
 const useStyles = makeStyles(() => ({
     root: {
         display: 'grid',
-        gridTemplateColumns: '2fr 1fr',
-        gridTemplateRows: 'fr 1fr',
-        gridGap: '2rem',
         alignItems: 'center',
     },
     textfield: {
+        marginLeft: '4rem',
+        marginRight: '1rem',
+    },
+    textfieldBox: {
         gridColumn: '1/3',
         justifySelf: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '1rem',
     },
     btn: {
-        justifySelf: 'flex-end',
+        gridColumn: '1/3',
+        justifySelf: 'center',
     },
 }));
 
@@ -46,22 +57,24 @@ export const InputBar: FC<InputBarPropsType> = ({
 
     return (
         <Container className={classes.root} maxWidth="sm">
-            <TextField
-                className={classes.textfield}
-                name="city"
-                variant="outlined"
-                placeholder="Your city"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                onKeyPress={handleKeyPress}
-            />
+            <Box className={classes.textfieldBox}>
+                <TextField
+                    className={classes.textfield}
+                    name="city"
+                    variant="outlined"
+                    placeholder="Your city"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                />
+                <Settings changeUnits={changeUnits} />
+            </Box>
             <Button
                 onClick={submit}
                 className={classes.btn}
                 variant="contained">
                 Get forecast
             </Button>
-            <Settings changeUnits={changeUnits} />
         </Container>
     );
 };

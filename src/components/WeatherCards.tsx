@@ -1,15 +1,15 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { ComponentType, FC, useEffect, useState } from 'react';
 import {
     Box,
     Container,
     makeStyles,
     Theme,
     Typography,
-    useTheme,
 } from '@material-ui/core';
 import { weatherAPI } from '../api/api';
-import Preloader from '../assets/three-dots.svg';
 import { TUnits } from '../App';
+import ErrorIcon from '@material-ui/icons/Error';
+import { Preloader } from '../common/Preloader/Preloader';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -24,33 +24,36 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderRadius: '10px',
         border: `1px solid ${theme.palette.primary.light}`,
     },
-    loaderLight: {
-        marginTop: '3.5rem',
-        backgroundColor: theme.palette.background.paper,
-        padding: '5px',
-        borderRadius: '8px',
-    },
-    loaderDark: {
-        marginTop: '3.5rem',
-    },
     mainTemp: {
         fontSize: '2rem',
         display: 'flex',
         alignItems: 'center',
     },
+    errorTypoBox: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: '1.2rem',
+        color: theme.palette.secondary.light,
+    },
 }));
 
-type WeatherCardsPropsType = {
+type TWeatherCards = {
     city: string;
     units: TUnits;
 };
 
-export const WeatherCards: FC<WeatherCardsPropsType> = ({ city, units }) => {
-    const [wData, setWData] = useState(null);
-    const [error, setError] = useState(null);
+type TWeatherData = {
+    list: any;
+};
+
+export const WeatherContainer: FC<TWeatherCards> = ({ city, units }) => {
+    const [weatherData, setWeatherData] = useState<TWeatherData | undefined>(
+        undefined
+    );
+    const [error, setError] = useState<{} | undefined>(undefined);
     const [isFetching, setIsFetching] = useState(false);
     const classes = useStyles();
-    const theme = useTheme();
 
     let today = new Date();
     let todayData: string = today.toJSON();
@@ -61,8 +64,8 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city, units }) => {
         weatherAPI
             .getWeatherData(city, units)
             .then((res) => {
-                setError(null);
-                setWData(res.data);
+                setError(undefined);
+                setWeatherData(res.data);
                 setIsFetching(false);
             })
             .catch((reason) => {
@@ -71,11 +74,10 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city, units }) => {
             });
     }, [city, units]);
 
-    let weatherCards: any[] = [];
+    let weatherCards: ComponentType[] = [];
 
-    if (wData !== null) {
-        //@ts-ignore
-        weatherCards = wData.list.map((data: any) => {
+    if (weatherData) {
+        weatherCards = weatherData.list.map((data: any) => {
             let sliced = data.dt_txt.slice(0, 10);
             if (sliced === todayData) {
                 return <WeatherCard units={units} data={data} key={data.dt} />;
@@ -85,29 +87,12 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city, units }) => {
         });
     }
 
-    if (error) {
-        return (
-            <Box style={{ textAlign: 'center', fontSize: '20px' }}>
-                {/* @ts-ignore*/}
-                {error.message}
-            </Box>
-        );
-    }
-
     return (
         <Container maxWidth="lg" className={classes.root}>
-            {isFetching && theme.palette.type === 'light' ? (
-                <img
-                    src={Preloader}
-                    alt="Loading..."
-                    className={classes.loaderLight}
-                />
-            ) : isFetching && theme.palette.type === 'dark' ? (
-                <img
-                    src={Preloader}
-                    alt="Loading..."
-                    className={classes.loaderDark}
-                />
+            {isFetching ? (
+                <Preloader />
+            ) : error ? (
+                <ErrorBox error={error} />
             ) : (
                 weatherCards
             )}
@@ -115,12 +100,12 @@ export const WeatherCards: FC<WeatherCardsPropsType> = ({ city, units }) => {
     );
 };
 
-type CardPropsType = {
+type TWeatherCard = {
     data: any;
     units: TUnits;
 };
 
-const WeatherCard: FC<CardPropsType> = ({ data, units }) => {
+const WeatherCard: FC<TWeatherCard> = ({ data, units }) => {
     const handleCardCilck = () => {
         console.log('weathercard click action');
     };
@@ -160,7 +145,7 @@ const WeatherCard: FC<CardPropsType> = ({ data, units }) => {
                 />
             </Typography>
             <Typography component="p">
-                Feels like: {Math.round(data.main.feels_like)}
+                Feels like {Math.round(data.main.feels_like)}
                 <span>
                     {units === 'imperial' ? (
                         <span>&deg;F</span>
@@ -169,6 +154,31 @@ const WeatherCard: FC<CardPropsType> = ({ data, units }) => {
                     )}
                 </span>
             </Typography>
+        </Box>
+    );
+};
+
+type TErrorBox = {
+    error: any;
+};
+
+const ErrorBox: FC<TErrorBox> = ({ error }) => {
+    const classes = useStyles();
+
+    return (
+        <Box style={{ textAlign: 'center', fontSize: '20px' }}>
+            {/* @ts-ignore*/}
+            {error.message === 'Request failed with status code 404' ? (
+                <Box className={classes.errorTypoBox}>
+                    <span style={{ marginRight: '0.5rem' }}>
+                        City not fount{' '}
+                    </span>
+                    <ErrorIcon />
+                </Box>
+            ) : (
+                //@ts-ignore
+                error.message
+            )}
         </Box>
     );
 };

@@ -1,6 +1,8 @@
 # React Weather-App
 
-### Technologies used in this project:
+![Weather App](./public/Graphicloads-Colorful-Long-Shadow-Cloud.ico)
+
+### Technologies used:
 
 -   React + Typescript
 -   Axios
