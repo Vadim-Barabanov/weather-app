@@ -8,6 +8,13 @@
 -   Axios
 -   Material-UI
 
+### TODO:
+
+-   Divide WeatherContainer to separate components
+-   Cards on night
+-   Forecast for 5 days
+-   Better UI&UX on card click (more information expand)
+
 ### Author
 
 [Vadim Barabanov](https://vadim-barabanov.netlify.app)

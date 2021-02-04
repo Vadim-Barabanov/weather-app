@@ -8,6 +8,8 @@ import {
 } from '@material-ui/core';
 import { weatherAPI } from '../api/api';
 import ErrorIcon from '@material-ui/icons/Error';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Preloader } from '../common/Preloader/Preloader';
 import { TUnits } from '../common/types';
 
@@ -15,19 +17,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     root: {
         display: 'flex',
         justifyContent: 'center',
+        alignItems: 'flex-start',
         flexWrap: 'wrap',
     },
+    arrowBtn: {
+        padding: '0 1rem',
+        justifySelf: 'center',
+        alignSelf: 'center',
+        '&:hover': {
+            cursor: 'pointer',
+            color: theme.palette.secondary.light,
+        },
+    },
     card: {
-        padding: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        padding: '1rem 1rem 0.5rem 1rem',
         margin: '1rem',
         width: '180px',
         borderRadius: '10px',
         border: `1px solid ${theme.palette.primary.light}`,
         transition: '0.3s',
-        '&:hover': {
-            cursor: 'pointer',
-            backgroundColor: theme.palette.secondary.light,
-        },
     },
     mainTemp: {
         fontSize: '2rem',
@@ -39,6 +51,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: '1.2rem',
+        color: theme.palette.secondary.light,
+    },
+    detailedBox: {
         color: theme.palette.secondary.light,
     },
 }));
@@ -175,7 +190,7 @@ const WeatherCard: FC<TWeatherCard> = ({
         </span>
     );
     return (
-        <Box onClick={handleCardCilck} className={classes.card}>
+        <Box className={classes.card}>
             <Typography variant="h6">{stringTime}</Typography>
             <Typography className={classes.mainTemp} component="p">
                 <span>{Math.round(data.main.temp)}</span>
@@ -189,19 +204,30 @@ const WeatherCard: FC<TWeatherCard> = ({
                 Feels like {Math.round(data.main.feels_like)}
                 {jsxUnits}
             </Typography>
+            <Box className={classes.arrowBtn} onClick={handleCardCilck}>
+                {isDetailed ? (
+                    <ExpandLessIcon style={{ alignSelf: 'center' }} />
+                ) : (
+                    <ExpandMoreIcon />
+                )}
+            </Box>
+
             {isDetailed ? (
-                <Box>
-                    <Box>{data.weather[0].description}</Box>
-                    <Box>Humidity: {data.main.humidity} %</Box>
-                    <Box>
-                        <span>Max temp: {data.main.temp_max} </span>
+                <Box className={classes.detailedBox}>
+                    <Typography component="p">
+                        Humidity: {data.main.humidity} %
+                    </Typography>
+                    <Typography component="p">
+                        <span>Max temp: {Math.round(data.main.temp_max)} </span>
                         {jsxUnits}
-                    </Box>
-                    <Box>
-                        <span>Min temp: {data.main.temp_min} </span>
+                    </Typography>
+                    <Typography component="p">
+                        <span>Min temp: {Math.round(data.main.temp_min)} </span>
                         {jsxUnits}
-                    </Box>
-                    <Box>Wind speed: {data.wind.speed} m/s</Box>
+                    </Typography>
+                    <Typography component="p">
+                        Wind speed: {Math.round(data.wind.speed)} m/s
+                    </Typography>
                 </Box>
             ) : null}
         </Box>
