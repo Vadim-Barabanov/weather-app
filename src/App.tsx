@@ -4,13 +4,12 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import './App.css';
 import { INITIAL_CITY, INITIAL_UNITS } from './common/constants';
+import { TUnits } from './common/types';
 import { CityCards } from './components/CityCards';
 import { Header } from './components/Header';
 import { InputBar } from './components/InputBar';
 import { WeatherContainer } from './components/WeatherCards';
 import { dark, light } from './themes/default';
-
-export type TUnits = 'metric' | 'imperial' | '';
 
 const App = () => {
     const toggler = localStorage.getItem('Theme');

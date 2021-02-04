@@ -7,9 +7,9 @@ import {
     Typography,
 } from '@material-ui/core';
 import { weatherAPI } from '../api/api';
-import { TUnits } from '../App';
 import ErrorIcon from '@material-ui/icons/Error';
 import { Preloader } from '../common/Preloader/Preloader';
+import { TUnits } from '../common/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

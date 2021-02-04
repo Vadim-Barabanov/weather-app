@@ -3,7 +3,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import SettingsIcon from '@material-ui/icons/Settings';
 import React, { FC } from 'react';
-import { TUnits } from '../App';
+import { TUnits } from '../common/types';
 
 type TProps = {
     changeUnits: (value: TUnits) => void;

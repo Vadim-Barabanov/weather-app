@@ -6,8 +6,8 @@ import {
     TextField,
 } from '@material-ui/core';
 import React, { FC, useState } from 'react';
+import { TUnits } from '../common/types';
 import { Settings } from './Settings';
-import { TUnits } from '../App';
 
 const useStyles = makeStyles(() => ({
     root: {
