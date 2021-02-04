@@ -8,7 +8,7 @@ import { TUnits } from './common/types';
 import { CityCards } from './components/CityCards';
 import { Header } from './components/Header';
 import { InputBar } from './components/InputBar';
-import { WeatherContainer } from './components/WeatherCards';
+import { WeatherPage } from './components/WeatherPage/WeatherPage';
 import { dark, light } from './themes/default';
 
 const App = () => {
@@ -45,7 +45,7 @@ const App = () => {
                         }}>
                         {city + ' today:'}
                     </Typography>
-                    <WeatherContainer units={units} city={city} />
+                    <WeatherPage units={units} city={city} />
                 </Box>
             </Container>
         </ThemeProvider>
