@@ -1,4 +1,4 @@
-import { Container, makeStyles } from '@material-ui/core';
+import { Box, Container, makeStyles } from '@material-ui/core';
 import React, { ComponentType, FC, useEffect, useState } from 'react';
 import { weatherAPI } from '../../api/api';
 import { Preloader } from '../../common/Preloader/Preloader';
@@ -34,11 +34,9 @@ export const WeatherPage: FC<TWeatherCards> = ({ city, units }) => {
     const [detailedCards, setDetailedCards] = useState<number[] | []>([]);
 
     const addDetailedCard = (cardId: number) => {
-        console.log('card added');
         setDetailedCards([...detailedCards, cardId]);
     };
     const removeDetailedCard = (cardId: number) => {
-        console.log('card removed');
         setDetailedCards(detailedCards.filter((c) => cardId !== c));
     };
 

@@ -10,10 +10,9 @@
 
 ### TODO:
 
--   Divide WeatherContainer to separate components
 -   Cards on night
 -   Forecast for 5 days
--   Better UI&UX on card click (more information expand)
+-   Button for expand detailed information in all cards
 
 ### Author
 
