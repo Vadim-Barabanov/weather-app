@@ -23,6 +23,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: '180px',
         borderRadius: '10px',
         border: `1px solid ${theme.palette.primary.light}`,
+        transition: '0.3s',
+        '&:hover': {
+            cursor: 'pointer',
+            backgroundColor: theme.palette.secondary.light,
+        },
     },
     mainTemp: {
         fontSize: '2rem',
@@ -54,6 +59,16 @@ export const WeatherContainer: FC<TWeatherCards> = ({ city, units }) => {
     const [error, setError] = useState<{} | undefined>(undefined);
     const [isFetching, setIsFetching] = useState(false);
     const classes = useStyles();
+    const [detailedCards, setDetailedCards] = useState<number[] | []>([]);
+
+    const addDetailedCard = (cardId: number) => {
+        console.log('card added');
+        setDetailedCards([...detailedCards, cardId]);
+    };
+    const removeDetailedCard = (cardId: number) => {
+        console.log('card removed');
+        setDetailedCards(detailedCards.filter((c) => cardId !== c));
+    };
 
     let today = new Date();
     let todayData: string = today.toJSON();
@@ -79,8 +94,19 @@ export const WeatherContainer: FC<TWeatherCards> = ({ city, units }) => {
     if (weatherData) {
         weatherCards = weatherData.list.map((data: any) => {
             let sliced = data.dt_txt.slice(0, 10);
+            let isDetailed = detailedCards.some((c) => c === data.dt);
             if (sliced === todayData) {
-                return <WeatherCard units={units} data={data} key={data.dt} />;
+                return (
+                    <WeatherCard
+                        isDetailed={isDetailed}
+                        addDetailedCard={addDetailedCard}
+                        removeDetailedCard={removeDetailedCard}
+                        units={units}
+                        data={data}
+                        id={data.dt}
+                        key={data.dt}
+                    />
+                );
             } else {
                 return null;
             }
@@ -101,15 +127,31 @@ export const WeatherContainer: FC<TWeatherCards> = ({ city, units }) => {
 };
 
 type TWeatherCard = {
+    id: number;
     data: any;
     units: TUnits;
+    isDetailed: boolean;
+    addDetailedCard: (cardId: number) => void;
+    removeDetailedCard: (cardId: number) => void;
 };
 
-const WeatherCard: FC<TWeatherCard> = ({ data, units }) => {
+const WeatherCard: FC<TWeatherCard> = ({
+    id,
+    data,
+    units,
+    isDetailed,
+    addDetailedCard,
+    removeDetailedCard,
+}) => {
     const handleCardCilck = () => {
-        console.log('weathercard click action');
+        if (isDetailed) {
+            removeDetailedCard(id);
+        } else {
+            addDetailedCard(id);
+        }
     };
 
+    console.log('card ' + data.dt + ' detailed is ' + isDetailed);
     const baseImgURL = 'https://openweathermap.org/img/wn/';
 
     const t = data.dt_txt.slice(11, 16);
@@ -127,18 +169,17 @@ const WeatherCard: FC<TWeatherCard> = ({ data, units }) => {
             : t;
 
     const classes = useStyles();
+    const jsxUnits = (
+        <span>
+            {units === 'metric' ? <span>&deg;C</span> : <span>&deg;F</span>}
+        </span>
+    );
     return (
         <Box onClick={handleCardCilck} className={classes.card}>
             <Typography variant="h6">{stringTime}</Typography>
             <Typography className={classes.mainTemp} component="p">
                 <span>{Math.round(data.main.temp)}</span>
-                <span>
-                    {units === 'metric' ? (
-                        <span>&deg;C</span>
-                    ) : (
-                        <span>&deg;F</span>
-                    )}
-                </span>
+                {jsxUnits}
                 <img
                     src={`${baseImgURL + data.weather[0].icon}.png`}
                     alt="Weather"
@@ -146,14 +187,23 @@ const WeatherCard: FC<TWeatherCard> = ({ data, units }) => {
             </Typography>
             <Typography component="p">
                 Feels like {Math.round(data.main.feels_like)}
-                <span>
-                    {units === 'imperial' ? (
-                        <span>&deg;F</span>
-                    ) : (
-                        <span>&deg;C</span>
-                    )}
-                </span>
+                {jsxUnits}
             </Typography>
+            {isDetailed ? (
+                <Box>
+                    <Box>{data.weather[0].description}</Box>
+                    <Box>Humidity: {data.main.humidity} %</Box>
+                    <Box>
+                        <span>Max temp: {data.main.temp_max} </span>
+                        {jsxUnits}
+                    </Box>
+                    <Box>
+                        <span>Min temp: {data.main.temp_min} </span>
+                        {jsxUnits}
+                    </Box>
+                    <Box>Wind speed: {data.wind.speed} m/s</Box>
+                </Box>
+            ) : null}
         </Box>
     );
 };
