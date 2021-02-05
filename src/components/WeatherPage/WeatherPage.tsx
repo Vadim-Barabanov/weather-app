@@ -50,6 +50,7 @@ export const WeatherPage: FC<TWeatherCards> = ({ city, units }) => {
             .getWeatherData(city, units)
             .then((res) => {
                 setError(undefined);
+                console.log(res.data);
                 setWeatherData(res.data);
                 setIsFetching(false);
             })
