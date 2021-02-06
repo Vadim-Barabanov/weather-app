@@ -1,4 +1,5 @@
-import { Box, Container, makeStyles } from '@material-ui/core';
+import { Chart } from '../../Chart';
+import { Container, makeStyles } from '@material-ui/core';
 import React, { ComponentType, FC, useEffect, useState } from 'react';
 import { weatherAPI } from '../../api/api';
 import { Preloader } from '../../common/Preloader/Preloader';
@@ -61,8 +62,28 @@ export const WeatherPage: FC<TWeatherCards> = ({ city, units }) => {
     }, [city, units]);
 
     let weatherCards: ComponentType[] = [];
+    let chart: any;
 
+    let dataX = [];
     if (weatherData) {
+        let date = weatherData.list.map((item: any) => {
+            let str: string;
+            str = item.dt_txt.slice(11, 16);
+            str += ' ' + item.dt_txt.slice(5, 10);
+            return str;
+        });
+        let temp = weatherData.list.map((item: any) =>
+            Math.round(item.main.temp)
+        );
+        for (let i = 0; i < date.length; i++) {
+            dataX.push({
+                date: date[i],
+                temp: temp[i],
+            });
+        }
+
+        chart = <Chart data={dataX} />;
+
         weatherCards = weatherData.list.map((data: any) => {
             let sliced = data.dt_txt.slice(0, 10);
             let isDetailed = detailedCards.some((c) => c === data.dt);
