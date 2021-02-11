@@ -3,6 +3,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import React, { FC } from 'react';
 import { TUnits } from '../../common/types';
 import { Typography, Box, makeStyles, Theme } from '@material-ui/core';
+import { timeToString } from '../../utils/timeToString';
 
 const useStyles = makeStyles((theme: Theme) => ({
     arrowBtn: {
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         alignItems: 'flex-start',
         padding: '1rem 1rem 0.5rem 1rem',
         margin: '1rem',
-        width: '180px',
+        width: '200px',
         borderRadius: '10px',
         border: `1px solid ${theme.palette.primary.light}`,
         transition: '0.3s',
@@ -64,18 +65,7 @@ export const WeatherCard: FC<TWeatherCard> = ({
     const baseImgURL = 'https://openweathermap.org/img/wn/';
 
     const t = data.dt_txt.slice(11, 16);
-    let stringTime: string =
-        t === '09:00'
-            ? 'Morning'
-            : t === '12:00'
-            ? 'Midday'
-            : t === '15:00'
-            ? 'Afternoon'
-            : t === '18:00'
-            ? 'Evening'
-            : t === '21:00'
-            ? 'Night'
-            : t;
+    let stringTime: string = timeToString(t);
 
     const classes = useStyles();
     const adaptUnits = (

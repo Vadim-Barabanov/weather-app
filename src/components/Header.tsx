@@ -13,17 +13,16 @@ import { FC } from 'react';
 const useStyles = makeStyles(() => ({
     headerBox: {
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
+        alignItems: 'center',
     },
     switcherBox: {
         display: 'flex',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        padding: '1.5rem 15% 0 15%',
     },
-    swBphone: {
+    mob: {
         justifyContent: 'center',
-        padding: '1.5rem 0 0 0',
     },
 }));
 
@@ -44,18 +43,18 @@ export const Header: FC<TProps> = ({ isDark, setIsDark }) => {
 
     return (
         <>
-            <Box
-                className={`${classes.switcherBox} ${
-                    matches ? null : classes.swBphone
-                }`}>
-                <WbSunnyIcon />
-                <Switch checked={!isDark} onChange={toggleTheme} />
-                <Brightness3Icon />
-            </Box>
-            <Box my={4} className={classes.headerBox}>
-                <Typography variant="h4" component="h1">
+            <Box my={2} className={classes.headerBox}>
+                <Typography variant="h5" component="h1">
                     Weather App
                 </Typography>
+                <Box
+                    className={`${classes.switcherBox} ${
+                        matches ? null : classes.mob
+                    }`}>
+                    <WbSunnyIcon />
+                    <Switch checked={!isDark} onChange={toggleTheme} />
+                    <Brightness3Icon />
+                </Box>
             </Box>
         </>
     );

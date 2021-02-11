@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from '@material-ui/core';
+import { Box, Container } from '@material-ui/core';
 import CssBaseLine from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import React, { useState } from 'react';
@@ -36,15 +36,6 @@ const App = () => {
                         changeCity={changeCity}
                     />
                     <CityCards changeCity={changeCity} />
-                    <Typography
-                        component="h2"
-                        variant="h4"
-                        style={{
-                            textAlign: 'center',
-                            margin: '30px 0 15px 0',
-                        }}>
-                        {city + ' today:'}
-                    </Typography>
                     <WeatherPage units={units} city={city} />
                 </Box>
             </Container>
